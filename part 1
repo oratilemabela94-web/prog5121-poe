@@ -8,12 +8,12 @@ import java.util.Scanner;
  *   <li>Username  – must contain an underscore and be at most 5 characters long.</li>
  *   <li>Password  – at least 8 characters; must include an uppercase letter,
  *                   a digit, and a special (non-alphanumeric) character.</li>
- *   <li>Cell phone – South-African format: starts with {@code +27},
+ *   <li>Cell phone – South-African format: starts with {code +27},
  *                   total length of 12 characters, digits only after the prefix.</li>
  * </ul>
  *
- * @author  Student
- * @version 1.0
+ * author  Student
+ * version 1.0
  */
 class Login {
 
@@ -35,12 +35,12 @@ class Login {
      *
      * <p>A valid username:
      * <ul>
-     *   <li>contains at least one underscore ({@code _}), and</li>
+     *   <li>contains at least one underscore ({code _}), and</li>
      *   <li>is no longer than 5 characters.</li>
      * </ul>
      *
-     * @param username the username string to validate
-     * @return {@code true} if the username meets both criteria; {@code false} otherwise
+     * param username the username string to validate
+     * return {code true} if the username meets both criteria; {code false} otherwise
      */
     public boolean checkUserName(String username) {
         return username.contains("_") && username.length() <= 5;
@@ -58,8 +58,8 @@ class Login {
      *       letter or a digit).</li>
      * </ul>
      *
-     * @param password the password string to validate
-     * @return {@code true} if all password rules are satisfied; {@code false} otherwise
+     * param password the password string to validate
+     * return {code true} if all password rules are satisfied; {code false} otherwise
      */
     public boolean checkPassword(String password) {
 
@@ -92,14 +92,14 @@ class Login {
      *
      * <p>A valid number:
      * <ul>
-     *   <li>starts with the South-African country code {@code +27},</li>
+     *   <li>starts with the South-African country code {code +27},</li>
      *   <li>has a total length of exactly 12 characters
-     *       ({@code +27} + 9 subscriber digits), and</li>
-     *   <li>contains only decimal digits after the {@code +27} prefix.</li>
+     *       ({code +27} + 9 subscriber digits), and</li>
+     *   <li>contains only decimal digits after the {code +27} prefix.</li>
      * </ul>
      *
-     * @param phone the phone-number string to validate
-     * @return {@code true} if the number is correctly formatted; {@code false} otherwise
+     * param phone the phone-number string to validate
+     * return {code true} if the number is correctly formatted; {code false} otherwise
      */
     public boolean checkPhone(String phone) {
 
@@ -131,7 +131,7 @@ class Login {
      * message and returns early without storing any credentials.
      * On success all three values are stored for later login.
      *
-     * @param sc the {@link Scanner} used to read console input
+     * param sc the {link Scanner} used to read console input
      */
     public void register(Scanner sc) {
 
@@ -182,7 +182,7 @@ class Login {
      * <p>The user is prompted for a username and password. Both must match the
      * values captured during registration for login to succeed.
      *
-     * @param sc the {@link Scanner} used to read console input
+     * param sc the {link Scanner} used to read console input
      */
     public void login(Scanner sc) {
 
@@ -218,7 +218,7 @@ public class Main {
     /**
      * Application entry point.
      *
-     * @param args command-line arguments (not used)
+     * param args command-line arguments (not used)
      */
     public static void main(String[] args) {
 
