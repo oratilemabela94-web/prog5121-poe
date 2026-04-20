@@ -1,0 +1,261 @@
+import java.util.Scanner;
+
+/**
+ * Login handles user registration and authentication.
+ *
+ * <p>Validation rules enforced:
+ * <ul>
+ *   <li>Username  – must contain an underscore and be at most 5 characters long.</li>
+ *   <li>Password  – at least 8 characters; must include an uppercase letter,
+ *                   a digit, and a special (non-alphanumeric) character.</li>
+ *   <li>Cell phone – South-African format: starts with {@code +27},
+ *                   total length of 12 characters, digits only after the prefix.</li>
+ * </ul>
+ *
+ * @author  Student
+ * @version 1.0
+ */
+class Login {
+
+    /** Username captured during registration. */
+    private String storedUsername;
+
+    /** Password captured during registration. */
+    private String storedPassword;
+
+    /** South-African cell-phone number captured during registration. */
+    private String storedPhone;
+
+    // -----------------------------------------------------------------------
+    // Validation helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Validates a username.
+     *
+     * <p>A valid username:
+     * <ul>
+     *   <li>contains at least one underscore ({@code _}), and</li>
+     *   <li>is no longer than 5 characters.</li>
+     * </ul>
+     *
+     * @param username the username string to validate
+     * @return {@code true} if the username meets both criteria; {@code false} otherwise
+     */
+    public boolean checkUserName(String username) {
+        return username.contains("_") && username.length() <= 5;
+    }
+
+    /**
+     * Validates a password without using regular expressions.
+     *
+     * <p>A valid password:
+     * <ul>
+     *   <li>is at least 8 characters long,</li>
+     *   <li>contains at least one uppercase letter (A–Z),</li>
+     *   <li>contains at least one digit (0–9), and</li>
+     *   <li>contains at least one special character (anything that is not a
+     *       letter or a digit).</li>
+     * </ul>
+     *
+     * @param password the password string to validate
+     * @return {@code true} if all password rules are satisfied; {@code false} otherwise
+     */
+    public boolean checkPassword(String password) {
+
+        // Rule 1 – minimum length
+        if (password.length() < 8) return false;
+
+        boolean hasUpper   = false;  // tracks uppercase letter presence
+        boolean hasNumber  = false;  // tracks digit presence
+        boolean hasSpecial = false;  // tracks special-character presence
+
+        // Iterate over every character to check each rule
+        for (int i = 0; i < password.length(); i++) {
+            char ch = password.charAt(i);
+
+            if (Character.isUpperCase(ch)) {
+                hasUpper = true;           // found an uppercase letter
+            } else if (Character.isDigit(ch)) {
+                hasNumber = true;          // found a digit
+            } else if (!Character.isLetterOrDigit(ch)) {
+                hasSpecial = true;         // found a special character
+            }
+        }
+
+        // All three character-class rules must be satisfied
+        return hasUpper && hasNumber && hasSpecial;
+    }
+
+    /**
+     * Validates a South-African cell-phone number without using regular expressions.
+     *
+     * <p>A valid number:
+     * <ul>
+     *   <li>starts with the South-African country code {@code +27},</li>
+     *   <li>has a total length of exactly 12 characters
+     *       ({@code +27} + 9 subscriber digits), and</li>
+     *   <li>contains only decimal digits after the {@code +27} prefix.</li>
+     * </ul>
+     *
+     * @param phone the phone-number string to validate
+     * @return {@code true} if the number is correctly formatted; {@code false} otherwise
+     */
+    public boolean checkPhone(String phone) {
+
+        // Rule 1 – must start with the South-African country code
+        if (!phone.startsWith("+27")) return false;
+
+        // Rule 2 – total length: "+27" (3 chars) + 9 subscriber digits = 12
+        if (phone.length() != 12) return false;
+
+        // Rule 3 – every character after "+27" must be a decimal digit
+        for (int i = 3; i < phone.length(); i++) {
+            if (!Character.isDigit(phone.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true; // all rules passed
+    }
+
+    // -----------------------------------------------------------------------
+    // Core operations
+    // -----------------------------------------------------------------------
+
+    /**
+     * Guides the user through the registration process.
+     *
+     * <p>The user is prompted for a username, password, and cell-phone number
+     * in sequence. If any field fails validation the method prints an error
+     * message and returns early without storing any credentials.
+     * On success all three values are stored for later login.
+     *
+     * @param sc the {@link Scanner} used to read console input
+     */
+    public void register(Scanner sc) {
+
+        System.out.println("=== REGISTER ===");
+
+        // --- Username ---
+        System.out.print("Enter username: ");
+        String username = sc.nextLine();
+
+        if (checkUserName(username)) {
+            System.out.println("Username successfully captured.");
+            storedUsername = username;
+        } else {
+            System.out.println("Username is not correctly formatted.");
+            return; // abort registration if username is invalid
+        }
+
+        // --- Password ---
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        if (checkPassword(password)) {
+            System.out.println("Password successfully captured.");
+            storedPassword = password;
+        } else {
+            System.out.println("Password is not correctly formatted.");
+            return; // abort registration if password is invalid
+        }
+
+        // --- Cell-phone number ---
+        System.out.print("Enter cell phone (+27...): ");
+        String phone = sc.nextLine();
+
+        if (checkPhone(phone)) {
+            System.out.println("Cell phone number successfully added.");
+            storedPhone = phone;
+        } else {
+            System.out.println("Cell phone number incorrectly formatted.");
+            return; // abort registration if phone number is invalid
+        }
+
+        System.out.println("Registration successful!\n");
+    }
+
+    /**
+     * Authenticates the user against the stored credentials.
+     *
+     * <p>The user is prompted for a username and password. Both must match the
+     * values captured during registration for login to succeed.
+     *
+     * @param sc the {@link Scanner} used to read console input
+     */
+    public void login(Scanner sc) {
+
+        System.out.println("=== LOGIN ===");
+
+        System.out.print("Enter username: ");
+        String username = sc.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        // Both fields must match the stored credentials exactly
+        if (username.equals(storedUsername) && password.equals(storedPassword)) {
+            System.out.println("Welcome back! Login successful.");
+        } else {
+            System.out.println("Username or password incorrect, please try again.");
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Entry point
+// ---------------------------------------------------------------------------
+
+/**
+ * Main is the application entry point.
+ *
+ * <p>Presents a simple menu loop that lets the user register, log in,
+ * or exit the program.
+ */
+public class Main {
+
+    /**
+     * Application entry point.
+     *
+     * @param args command-line arguments (not used)
+     */
+    public static void main(String[] args) {
+
+        Scanner sc   = new Scanner(System.in);
+        Login   user = new Login();
+        int     choice;
+
+        do {
+            // Display the main menu
+            System.out.println("\n=== MENU ===");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("Choose option: ");
+
+            choice = sc.nextInt();
+            sc.nextLine(); // consume the trailing newline left by nextInt()
+
+            switch (choice) {
+                case 1:
+                    user.register(sc);
+                    break;
+
+                case 2:
+                    user.login(sc);
+                    break;
+
+                case 3:
+                    System.out.println("Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice.");
+            }
+
+        } while (choice != 3); // keep looping until the user chooses to exit
+
+        sc.close(); // release the Scanner resource
+    }
+}
